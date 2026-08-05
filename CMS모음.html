@@ -1,0 +1,262 @@
+﻿
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .screen {
+    background: linear-gradient(135deg, #1d2b64 0%, #f8cdda 100%);
+    min-height: 600px;
+    padding: 36px 16px 40px;
+    border-radius: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+  }
+  h1 { font-size: 22px; font-weight: 500; text-align: center; color: #fff; margin-bottom: 32px; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
+  .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 360px; margin: 0 auto; }
+  .folder-wrap { display: flex; flex-direction: column; align-items: center; }
+  .folder-btn {
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,.22);
+    border-radius: 26px;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 8px; padding: 12px;
+    border: none; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,.15);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .folder-btn:hover { transform: scale(1.04); box-shadow: 0 10px 28px rgba(0,0,0,.22); }
+  .folder-btn:active { transform: scale(0.94); }
+  .mini { background: rgba(255,255,255,.78); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #1e293b; }
+  .folder-label { font-size: 12px; font-weight: 500; color: #fff; margin-top: 9px; text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+
+  .overlay {
+    display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.42);
+    border-radius: 12px;
+    align-items: flex-start; justify-content: center;
+    z-index: 100; overflow-y: auto; padding: 24px 16px;
+  }
+  .overlay.open { display: flex; }
+  .folder-box {
+    background: rgba(255,255,255,.22);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    width: 100%; max-width: 340px;
+    padding: 22px 18px 24px;
+    box-shadow: 0 18px 48px rgba(0,0,0,.3);
+    position: relative; margin: auto;
+  }
+  .folder-title { font-size: 16px; font-weight: 600; color: #fff; text-align: center; margin-bottom: 18px; }
+  .apps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .app-link {
+    display: flex; flex-direction: column; align-items: center;
+    text-decoration: none; color: #fff;
+    background: rgba(0,0,0,.14);
+    padding: 11px 6px; border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.1);
+    transition: background .1s, transform .1s;
+  }
+  .app-link:hover { background: rgba(255,255,255,.18); }
+  .app-link:active { transform: scale(0.95); }
+  .icon-shape {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg,#fff 0%,#e2e8f0 100%);
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 7px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.12);
+  }
+  .icon-text { color: #1e293b; font-weight: 700; font-size: 13px; }
+  .app-title { font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 3px; line-height: 1.35; }
+  .app-url { font-size: 13px; color: rgba(255,255,255,.65); text-align: center; word-break: break-all; line-height: 1.3; }
+  .close-btn {
+    position: absolute; top: 12px; right: 14px;
+    background: rgba(255,255,255,.25); border: none; border-radius: 50%;
+    width: 28px; height: 28px; color: #fff; font-size: 15px;
+    cursor: pointer; line-height: 28px; text-align: center;
+  }
+  .close-btn:hover { background: rgba(255,255,255,.4); }
+  .screen-wrap { position: relative; }
+</style>
+
+<link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+<link rel="shortcut icon" href="./favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+<link rel="manifest" href="./site.webmanifest" />
+
+
+<div class="screen-wrap">
+  <div class="screen">
+    <h1>CMS주소모음</h1>
+    <div class="home-grid">
+
+      <div class="folder-wrap">
+        <button class="folder-btn" onclick="openFolder('tsq')">
+          <div class="mini">경방</div><div class="mini">스트림</div>
+          <div class="mini">테라스</div><div class="mini" style="opacity:0"></div>
+        </button>
+        <div class="folder-label">경방 / 타임스퀘어</div>
+      </div>
+
+      <div class="folder-wrap">
+        <button class="folder-btn" onclick="openFolder('lotte')">
+          <div class="mini">본점</div><div class="mini">마트</div>
+          <div class="mini">CMS</div><div class="mini">파트너</div>
+        </button>
+        <div class="folder-label">롯데 계열</div>
+      </div>
+
+      <div class="folder-wrap">
+        <button class="folder-btn" onclick="openFolder('shinsegae')">
+          <div class="mini">메인1</div><div class="mini">메인2</div>
+          <div class="mini">운영</div><div class="mini">팩토리</div>
+        </button>
+        <div class="folder-label">신세계 계열</div>
+      </div>
+
+      <div class="folder-wrap">
+        <button class="folder-btn" onclick="openFolder('etc')">
+          <div class="mini">이케아</div><div class="mini">해피</div>
+          <div class="mini">LG</div><div class="mini">현대</div>
+
+        </button>
+        <div class="folder-label">기타 브랜드</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 경방 -->
+  <div class="overlay" id="overlay-tsq" onclick="handleOverlayClick(event,'tsq')">
+    <div class="folder-box">
+      <button class="close-btn" onclick="closeFolder('tsq')">✕</button>
+      <div class="folder-title">경방 / 타임스퀘어 계열</div>
+      <div class="apps-grid">
+        <a href="http://115.21.56.220/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">경방</span></div>
+          <div class="app-title">경방 타임스퀘어</div>
+          <span class="app-url">115.21.56.220/stadmin</span>
+        </a>
+        <a href="http://203.234.251.8/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">스트림</span></div>
+          <div class="app-title">타임스트림</div>
+          <span class="app-url">203.234.251.8/stadmin</span>
+        </a>
+        <a href="http://211.221.225.158:9000/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">테라스</span></div>
+          <div class="app-title">타임테라스 (메타폴리스)</div>
+          <span class="app-url">211.221.225.158:9000/stadmin</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 롯데 -->
+  <div class="overlay" id="overlay-lotte" onclick="handleOverlayClick(event,'lotte')">
+    <div class="folder-box">
+      <button class="close-btn" onclick="closeFolder('lotte')">✕</button>
+      <div class="folder-title">롯데 계열</div>
+      <div class="apps-grid">
+        <a href="http://118.67.132.244/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">본점</span></div>
+          <div class="app-title">롯데백화점 본점</div>
+          <span class="app-url">118.67.132.244/stadmin</span>
+        </a>
+        <a href="http://lottemart.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">마트</span></div>
+          <div class="app-title">롯데마트</div>
+          <span class="app-url">lottemart.tovair.com/stadmin</span>
+        </a>
+        <a href="http://lottemart.tovair.com/monitor.jsp?search_brn_id=2" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">CMS</span></div>
+          <div class="app-title">롯데마트 CMS 모니터링</div>
+          <span class="app-url">lottemart.tovair.com/monitor.jsp</span>
+        </a>
+        <a href="https://partner.lottedept.com/wa/multiple/list" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">파트너</span></div>
+          <div class="app-title">롯데백화점 파트너</div>
+          <span class="app-url">partner.lottedept.com</span>
+        </a>
+        <a href="http://lotte-changwon.iptime.org:8080/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">창원</span></div>
+          <div class="app-title">롯데백화점 창원점</div>
+          <span class="app-url">lotte-changwon.iptime.org:8080</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 신세계 -->
+  <div class="overlay" id="overlay-shinsegae" onclick="handleOverlayClick(event,'shinsegae')">
+    <div class="folder-box">
+      <button class="close-btn" onclick="closeFolder('shinsegae')">✕</button>
+      <div class="folder-title">신세계 계열</div>
+      <div class="apps-grid">
+        <a href="https://nssg.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">메인1</span></div>
+          <div class="app-title">신세계 백화점 메인 1</div>
+          <span class="app-url">nssg.tovair.com/stadmin</span>
+        </a>
+        <a href="http://52.78.6.110/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">메인2</span></div>
+          <div class="app-title">신세계 백화점 메인 2</div>
+          <span class="app-url">52.78.6.110/stadmin</span>
+        </a>
+        <a href="https://ssg.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">운영</span></div>
+          <div class="app-title">SSG 운영</div>
+          <span class="app-url">ssg.tovair.com/stadmin</span>
+        </a>
+        <a href="https://factorystore.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">팩토리</span></div>
+          <div class="app-title">팩토리스토어</div>
+          <span class="app-url">factorystore.tovair.com/stadmin</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기타 -->
+  <div class="overlay" id="overlay-etc" onclick="handleOverlayClick(event,'etc')">
+    <div class="folder-box">
+      <button class="close-btn" onclick="closeFolder('etc')">✕</button>
+      <div class="folder-title">기타 브랜드 / 프로젝트</div>
+      <div class="apps-grid">
+        <a href="http://ikea.tovms.com" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">이케아</span></div>
+          <div class="app-title">이케아</div>
+          <span class="app-url">ikea.tovms.com</span>
+        </a>
+        <a href="https://lab.ihappystore.co.kr" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">해피</span></div>
+          <div class="app-title">해피스토어</div>
+          <span class="app-url">lab.ihappystore.co.kr</span>
+        </a>
+        <a href="http://lgsafe.tovms.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">LG</span></div>
+          <div class="app-title">LG 무재해 전광판</div>
+          <span class="app-url">lgsafe.tovms.com/stadmin</span>
+        </a>
+        <a href="http://hd.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">현대</span></div>
+          <div class="app-title">현대아울렛 / 더현대</div>
+          <span class="app-url">hd.tovair.com/stadmin</span>
+        </a>
+        <a href="http://ipark.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">iPark</span></div>
+          <div class="app-title">아이파크몰</div>
+          <span class="app-url">ipark.tovair.com/stadmin</span>
+        </a>
+        <a href="https://gjhfm.tovair.com/stadmin" target="_blank" class="app-link">
+          <div class="icon-shape"><span class="icon-text">광주</span></div>
+          <div class="app-title">광주역사민속박물관</div>
+          <span class="app-url">gjhfm.tovair.com/stadmin</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openFolder(id) { document.getElementById('overlay-'+id).classList.add('open'); }
+function closeFolder(id) { document.getElementById('overlay-'+id).classList.remove('open'); }
+function handleOverlayClick(e,id) { if(e.target===document.getElementById('overlay-'+id)) closeFolder(id); }
+</script>
