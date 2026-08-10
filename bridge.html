@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  // 1. 깃허브 원본 주소에서 엑셀 텍스트를 자유롭게 읽어옵니다. (새 창이므로 CSP 에러 안 남)
+  fetch('https://raw.githubusercontent.com/dalcomsolution/cms-redirection-pages/main/teamviewer.csv')
+    .then(res => res.text())
+    .then(text => {
+      // 2. 부모 창(관리자 페이지)의 메모리로 데이터를 쏴줍니다.
+      window.opener.postMessage(text, '*');
+      // 3. 임무를 마치면 0.1초 만에 스스로 창을 닫습니다.
+      window.close();
+    });
+</script>
+</body>
+</html>
